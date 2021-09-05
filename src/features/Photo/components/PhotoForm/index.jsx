@@ -7,6 +7,7 @@ import InputField from "../../../../custom-fields/InputField";
 import RandomPhotoField from "../../../../custom-fields/RandomPhotoField";
 import SelectField from "../../../../custom-fields/SelectField";
 import * as Yup from "yup";
+import Spinner from "reactstrap/lib/Spinner";
 
 PhotoForm.propTypes = {
   onSubmit: PropTypes.func,
@@ -17,11 +18,8 @@ PhotoForm.defaultProps = {
 };
 
 function PhotoForm(props) {
-  const initialValues = {
-    title: "",
-    categoryId: null,
-    photo: "",
-  };
+  const initialValues = props.initialValues;
+  const isAddMode = props.isAddMode;
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required("This field is required "),
@@ -40,7 +38,7 @@ function PhotoForm(props) {
       onSubmit={props.onSubmit}
     >
       {(formikProps) => {
-        const { values, errors, touched } = formikProps;
+        const { values, errors, touched, isSubmitting } = formikProps;
         console.log({ values, errors, touched });
 
         return (
@@ -64,8 +62,9 @@ function PhotoForm(props) {
               label="Photo"
             />
             <FormGroup>
-              <Button type="submit" color="primary">
-                Add to album
+              <Button type="submit" color={isAddMode ? "primary" : "success"}>
+                {isSubmitting && <Spinner size="sm" />}
+                {isAddMode ? "Add to album" : "Update your Photo"}
               </Button>
             </FormGroup>
           </Form>
